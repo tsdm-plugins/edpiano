@@ -1,0 +1,23 @@
+电钢琴插件音色来源 / Soundfont attribution
+==========================================
+
+本目录的 *.json 音色档由 MIDI.js Soundfonts 的 -mp3.js 音色档转换而来
+（只去掉 JS 外壳，采样数据原样保留）：
+
+  旋律乐器（88 键）：electric_piano_1 电钢琴、acoustic_grand_piano 三角钢琴、violin 小提琴、
+  music_box 八音盒、acoustic_guitar_steel 木吉他、string_ensemble_1 弦乐合奏、flute 长笛、marimba 马林巴
+    来源：https://github.com/gleitz/midi-js-soundfonts
+
+  鼓组（GM 打击乐键位，61 键）：percussion
+    来源：https://paulrosen.github.io/midi-js-soundfonts/FluidR3_GM/percussion-mp3.js
+    （原 gleitz 仓库不含 channel 10 打击乐；Paul Rosen 为 abcjs 维护的 fork，同样从 FluidR3_GM 渲染）
+
+  音色：FluidR3_GM（General MIDI 音色库）
+  作者：Frank Wen
+  授权：Creative Commons Attribution 3.0（CC BY 3.0）
+        https://creativecommons.org/licenses/by/3.0/
+
+按 CC BY 3.0 的要求，使用这些音色时需要保留上述署名。插件播放器底部与
+source/plugin/edpiano/README.md 都写明了音色来源。
+
+FluidR3_GM 原始 SoundFont 可在 https://www.synthfont.com/ 取得。

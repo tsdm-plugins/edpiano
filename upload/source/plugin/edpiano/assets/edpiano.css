@@ -1,0 +1,803 @@
+/*!
+ * 电钢琴 edpiano — 悬浮播放器样式（全部规则都锁在 #edpiano 里，不改站内任何元素）
+ * (C) 2026 Carinoasd
+ */
+
+#edpiano {
+	position: fixed;
+	right: 18px;
+	/* 原本 76px，会和右下角「紅包」浮標（bottom:82px、高 68px）叠在一起；
+	   下移到 4px 后整个圆钮落在红包下方，再往下就会有一部分出画面。 */
+	bottom: 4px;
+	z-index: 2147483000;
+	width: auto;
+	max-width: calc(100vw - 24px);
+	margin: 0;
+	padding: 0;
+	color: #3d4450;
+	font: 12px/1.5 "Microsoft yahei", "微软雅黑", Arial, Helvetica, sans-serif;
+	text-align: left;
+	-webkit-font-smoothing: antialiased;
+}
+
+#edpiano,
+#edpiano * {
+	box-sizing: border-box;
+}
+
+#edpiano button,
+#edpiano input {
+	margin: 0;
+	font: inherit;
+	color: inherit;
+	letter-spacing: normal;
+	text-transform: none;
+}
+
+#edpiano button {
+	cursor: pointer;
+	-webkit-appearance: none;
+	appearance: none;
+	background: none;
+	border: 0;
+	padding: 0;
+	line-height: 1;
+}
+
+#edpiano svg {
+	display: block;
+	width: 18px;
+	height: 18px;
+	fill: currentColor;
+	pointer-events: none;
+}
+
+#edpiano .ep-hide,
+#edpiano.ep-hide {
+	display: none !important;
+}
+
+/* ---------- 收起时的圆钮 ---------- */
+
+#edpiano .ep-dock {
+	display: none;
+	position: relative;
+	width: 46px;
+	height: 46px;
+	margin-left: auto;
+	border-radius: 50%;
+	background: linear-gradient(145deg, #5b8cf5 0%, #3f6fd8 100%);
+	box-shadow: 0 8px 22px rgba(46, 88, 175, .38), 0 2px 6px rgba(46, 88, 175, .28);
+	color: #fff;
+	transition: transform .16s ease, box-shadow .16s ease;
+}
+
+#edpiano .ep-dock:hover {
+	transform: translateY(-1px);
+	box-shadow: 0 10px 26px rgba(46, 88, 175, .45), 0 3px 8px rgba(46, 88, 175, .3);
+}
+
+#edpiano .ep-dock:active {
+	transform: translateY(0) scale(.97);
+}
+
+#edpiano .ep-dock svg {
+	width: 22px;
+	height: 22px;
+	margin: 0 auto;
+}
+
+#edpiano.ep-closed .ep-dock {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+#edpiano .ep-dot {
+	position: absolute;
+	right: 3px;
+	bottom: 3px;
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	background: #8de2b0;
+	border: 2px solid #3f6fd8;
+	display: none;
+}
+
+/* 浏览器把自动播放挡下来时，圆钮变成「继续播放」胶囊，点一下接着放 */
+#edpiano.ep-closed.ep-pending .ep-dock {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 6px;
+	width: auto;
+	padding: 0 14px 0 11px;
+	border-radius: 23px;
+}
+
+#edpiano.ep-closed.ep-pending .ep-dock::after {
+	content: "继续播放";
+	font-size: 12px;
+	font-weight: 600;
+	letter-spacing: .5px;
+}
+
+#edpiano.ep-playing .ep-dot {
+	display: block;
+	animation: ep-pulse 1.6s ease-in-out infinite;
+}
+
+/* 跟随者：另一个窗口在放，这里只同步不出声 */
+#edpiano.ep-following .ep-dot {
+	display: block;
+	background: #9fc0ff;
+	border-color: #3f6fd8;
+	animation: none;
+}
+
+#edpiano.ep-pending .ep-dot {
+	display: block;
+	background: #ffd479;
+	border-color: #3f6fd8;
+}
+
+@keyframes ep-pulse {
+	0%, 100% { opacity: 1; }
+	50% { opacity: .35; }
+}
+
+/* ---------- 面板 ---------- */
+
+#edpiano .ep-panel {
+	position: relative;
+	width: 332px;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+	border: 1px solid rgba(208, 220, 238, .9);
+	border-radius: 14px;
+	background: #fff;
+	box-shadow: 0 16px 44px rgba(28, 44, 80, .22), 0 2px 8px rgba(28, 44, 80, .08);
+	animation: ep-in .18s ease-out;
+}
+
+@keyframes ep-in {
+	from { opacity: 0; transform: translateY(6px) scale(.985); }
+	to { opacity: 1; transform: none; }
+}
+
+#edpiano .ep-hd {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 11px 12px 10px;
+	border-bottom: 1px solid #eef2f8;
+	background: linear-gradient(135deg, #f2f7ff 0%, #fbfdff 100%);
+}
+
+#edpiano .ep-logo {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	min-width: 0;
+	font-size: 13px;
+	font-weight: 700;
+	color: #2c4a86;
+	letter-spacing: .5px;
+}
+
+#edpiano .ep-logo svg {
+	width: 18px;
+	height: 18px;
+	color: #3f74e0;
+}
+
+#edpiano .ep-hd-r {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	margin-left: auto;
+}
+
+#edpiano .ep-inst {
+	display: flex;
+	flex-wrap: wrap;
+	overflow: hidden;
+	border: 1px solid #dbe4f2;
+	border-radius: 8px;
+	background: #fff;
+}
+
+#edpiano .ep-inst button {
+	padding: 3px 6px;
+	font-size: 10px;
+	line-height: 1.4;
+	color: #66707f;
+	white-space: nowrap;
+}
+
+#edpiano .ep-inst button.ep-on {
+	background: #e8f0ff;
+	color: #2f63c9;
+	font-weight: 700;
+}
+
+/* 这首不支持的音色：置灰、不可点 */
+#edpiano .ep-inst button.ep-no,
+#edpiano .ep-inst button.ep-no:hover {
+	opacity: 0.38;
+	color: #66707f;
+	background: transparent;
+	cursor: not-allowed;
+}
+
+#edpiano .ep-min {
+	width: 24px;
+	height: 24px;
+	border-radius: 7px;
+	color: #8c97a8;
+}
+
+#edpiano .ep-min:hover {
+	background: #eef3fb;
+	color: #4a5568;
+}
+
+#edpiano .ep-min svg {
+	width: 14px;
+	height: 14px;
+	margin: 0 auto;
+}
+
+#edpiano .ep-load {
+	height: 2px;
+	background: #e9eef7;
+}
+
+#edpiano .ep-load i {
+	display: block;
+	width: 0;
+	height: 100%;
+	background: linear-gradient(90deg, #79a6ff, #3f6fd8);
+	transition: width .25s ease;
+}
+
+/* ---------- 当前曲目 ---------- */
+
+#edpiano .ep-now {
+	padding: 10px 14px 0;
+}
+
+#edpiano .ep-name {
+	overflow: hidden;
+	font-size: 13px;
+	font-weight: 700;
+	color: #273246;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+#edpiano .ep-sub {
+	overflow: hidden;
+	margin-top: 2px;
+	font-size: 11px;
+	color: #93a0b4;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+#edpiano .ep-bar {
+	position: relative;
+	height: 6px;
+	margin: 10px 14px 0;
+	border-radius: 3px;
+	background: #e8edf6;
+	cursor: pointer;
+	touch-action: none;
+}
+
+#edpiano .ep-fill {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	width: 0;
+	border-radius: 3px;
+	background: linear-gradient(90deg, #79a6ff, #3f6fd8);
+}
+
+#edpiano .ep-knob {
+	position: absolute;
+	top: 50%;
+	left: 0;
+	width: 12px;
+	height: 12px;
+	margin: -6px 0 0 -6px;
+	border: 2px solid #3f74e0;
+	border-radius: 50%;
+	background: #fff;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, .18);
+	opacity: 0;
+	transition: opacity .15s;
+	pointer-events: none;
+}
+
+#edpiano .ep-bar:hover .ep-knob,
+#edpiano .ep-bar.ep-drag .ep-knob {
+	opacity: 1;
+}
+
+#edpiano .ep-time {
+	display: flex;
+	justify-content: space-between;
+	margin: 5px 14px 0;
+	font-size: 10px;
+	color: #9aa4b5;
+	font-variant-numeric: tabular-nums;
+}
+
+/* ---------- 控制条 ---------- */
+
+#edpiano .ep-ctrl {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	padding: 8px 12px 10px;
+}
+
+#edpiano .ep-btn {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 30px;
+	height: 30px;
+	border-radius: 9px;
+	color: #4a5568;
+	transition: background .14s, color .14s;
+}
+
+#edpiano .ep-btn:hover {
+	background: #eef3fb;
+	color: #2f63c9;
+}
+
+#edpiano .ep-play {
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	background: linear-gradient(145deg, #5b8cf5, #3f6fd8);
+	color: #fff;
+	box-shadow: 0 4px 12px rgba(63, 111, 216, .35);
+}
+
+#edpiano .ep-play:hover {
+	background: linear-gradient(145deg, #6a98f8, #4a79e0);
+	color: #fff;
+}
+
+#edpiano .ep-play svg {
+	width: 20px;
+	height: 20px;
+}
+
+#edpiano .ep-loop.ep-on {
+	background: #e8f0ff;
+	color: #2f63c9;
+}
+
+#edpiano .ep-vol {
+	display: flex;
+	align-items: center;
+	gap: 5px;
+	margin-left: auto;
+}
+
+#edpiano .ep-vol .ep-btn {
+	width: 26px;
+	height: 26px;
+}
+
+#edpiano .ep-vol .ep-btn svg {
+	width: 16px;
+	height: 16px;
+}
+
+#edpiano input.ep-range {
+	width: 66px;
+	height: 4px;
+	padding: 0;
+	border: 0;
+	border-radius: 2px;
+	outline: none;
+	background: #dde5f0;
+	-webkit-appearance: none;
+	appearance: none;
+	cursor: pointer;
+}
+
+#edpiano input.ep-range::-webkit-slider-thumb {
+	width: 12px;
+	height: 12px;
+	border: 2px solid #3f74e0;
+	border-radius: 50%;
+	background: #fff;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, .18);
+	-webkit-appearance: none;
+	appearance: none;
+}
+
+#edpiano input.ep-range::-moz-range-thumb {
+	width: 10px;
+	height: 10px;
+	border: 2px solid #3f74e0;
+	border-radius: 50%;
+	background: #fff;
+}
+
+#edpiano input.ep-range::-moz-range-track {
+	height: 4px;
+	border: 0;
+	border-radius: 2px;
+	background: #dde5f0;
+}
+
+/* ---------- 曲目表 ---------- */
+
+#edpiano .ep-list {
+	max-height: 236px;
+	overflow-x: hidden;
+	overflow-y: auto;
+	padding: 5px;
+	border-top: 1px solid #eef2f8;
+	background: #fbfcfe;
+	overscroll-behavior: contain;
+}
+
+#edpiano .ep-list::-webkit-scrollbar {
+	width: 6px;
+}
+
+#edpiano .ep-list::-webkit-scrollbar-thumb {
+	border-radius: 3px;
+	background: #d3dcea;
+}
+
+/* 分类分组头：点击收起／展开，收起状态记在浏览器里 */
+
+#edpiano .ep-cat {
+	display: flex;
+	align-items: center;
+	gap: 5px;
+	width: 100%;
+	padding: 5px 8px;
+	border-radius: 8px;
+	color: #8b95a6;
+	text-align: left;
+	cursor: pointer;
+}
+
+#edpiano .ep-cat:hover {
+	background: #f0f5fd;
+	color: #5b6675;
+}
+
+#edpiano .ep-chev {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 12px;
+	height: 12px;
+	flex: none;
+	transition: transform .18s ease;
+}
+
+#edpiano .ep-chev svg {
+	width: 10px;
+	height: 10px;
+	fill: currentColor;
+}
+
+#edpiano .ep-cat.ep-cat-open .ep-chev {
+	transform: rotate(90deg);
+}
+
+#edpiano .ep-cat-n {
+	flex: 1;
+	overflow: hidden;
+	font-size: 11px;
+	font-weight: 600;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+#edpiano .ep-cat-c {
+	flex: none;
+	padding: 0 5px;
+	font-size: 10px;
+	line-height: 15px;
+	color: #9aa4b5;
+	background: #eef2f8;
+	border-radius: 7px;
+	font-variant-numeric: tabular-nums;
+}
+
+/* 组里有当前播放的曲子时，组头点一点颜色 */
+#edpiano .ep-cat.ep-cat-live {
+	color: #3f74e0;
+}
+
+#edpiano .ep-cat.ep-cat-live .ep-cat-c {
+	color: #3f74e0;
+	background: #e2ebfd;
+}
+
+#edpiano .ep-item {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	width: 100%;
+	padding: 6px 8px;
+	border-radius: 8px;
+	color: #3d4450;
+	text-align: left;
+}
+
+#edpiano .ep-item:hover {
+	background: #f0f5fd;
+}
+
+#edpiano .ep-item.ep-cur {
+	background: #e8f0ff;
+	color: #1f4fae;
+}
+
+#edpiano .ep-item.ep-empty {
+	justify-content: center;
+	padding: 18px 8px;
+	color: #9aa4b5;
+	cursor: default;
+}
+
+#edpiano .ep-num {
+	width: 15px;
+	flex: none;
+	color: #a6b0c0;
+	font-size: 10px;
+	text-align: right;
+	font-variant-numeric: tabular-nums;
+}
+
+#edpiano .ep-item.ep-cur .ep-num {
+	color: #3f74e0;
+}
+
+#edpiano .ep-meta {
+	flex: 1;
+	min-width: 0;
+}
+
+#edpiano .ep-t {
+	overflow: hidden;
+	font-size: 12px;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+#edpiano .ep-a {
+	overflow: hidden;
+	margin-top: 1px;
+	font-size: 10px;
+	color: #9aa4b5;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+#edpiano .ep-item.ep-cur .ep-a {
+	color: #7c9ad1;
+}
+
+#edpiano .ep-eq {
+	display: none;
+	align-items: flex-end;
+	gap: 2px;
+	width: 12px;
+	height: 12px;
+	flex: none;
+}
+
+#edpiano.ep-playing .ep-item.ep-cur .ep-eq {
+	display: flex;
+}
+
+#edpiano .ep-eq i {
+	width: 2px;
+	height: 30%;
+	background: #3f74e0;
+	border-radius: 1px;
+	animation: ep-eq .9s ease-in-out infinite;
+}
+
+#edpiano .ep-eq i:nth-child(2) { animation-delay: .15s; height: 65%; }
+#edpiano .ep-eq i:nth-child(3) { animation-delay: .3s; height: 45%; }
+#edpiano .ep-eq i:nth-child(4) { animation-delay: .45s; height: 80%; }
+
+@keyframes ep-eq {
+	0%, 100% { transform: scaleY(.45); }
+	50% { transform: scaleY(1); }
+}
+
+/* ---------- 底部 ---------- */
+
+#edpiano .ep-ft {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 8px;
+	padding: 6px 12px 8px;
+	border-top: 1px solid #eef2f8;
+	background: #fbfcfe;
+	font-size: 10px;
+	color: #9aa4b5;
+}
+
+#edpiano .ep-ft a {
+	color: #7c9ad1;
+	text-decoration: none;
+}
+
+#edpiano .ep-ft a:hover {
+	text-decoration: underline;
+}
+
+/* ---------- 关灯模式 ---------- */
+
+html[data-tsdm-theme="dark"] #edpiano {
+	color: #e6eaf2;
+}
+
+html[data-tsdm-theme="dark"] #edpiano .ep-panel {
+	border-color: #333a47;
+	background: #20242c;
+	box-shadow: 0 16px 44px rgba(0, 0, 0, .55), 0 2px 8px rgba(0, 0, 0, .35);
+}
+
+html[data-tsdm-theme="dark"] #edpiano .ep-hd {
+	border-bottom-color: #2c323d;
+	background: linear-gradient(135deg, #262c37 0%, #22262e 100%);
+}
+
+html[data-tsdm-theme="dark"] #edpiano .ep-logo {
+	color: #cfe0ff;
+}
+
+html[data-tsdm-theme="dark"] #edpiano .ep-inst {
+	border-color: #3a4250;
+	background: #262b34;
+}
+
+html[data-tsdm-theme="dark"] #edpiano .ep-inst button {
+	color: #aab4c4;
+}
+
+html[data-tsdm-theme="dark"] #edpiano .ep-inst button.ep-on {
+	background: #2f4570;
+	color: #cfe0ff;
+}
+
+html[data-tsdm-theme="dark"] #edpiano .ep-inst button.ep-no,
+html[data-tsdm-theme="dark"] #edpiano .ep-inst button.ep-no:hover {
+	color: #aab4c4;
+	background: transparent;
+}
+
+html[data-tsdm-theme="dark"] #edpiano .ep-min:hover,
+html[data-tsdm-theme="dark"] #edpiano .ep-btn:hover {
+	background: #2c333f;
+	color: #cfe0ff;
+}
+
+html[data-tsdm-theme="dark"] #edpiano .ep-name {
+	color: #e9eef7;
+}
+
+html[data-tsdm-theme="dark"] #edpiano .ep-sub,
+html[data-tsdm-theme="dark"] #edpiano .ep-time,
+html[data-tsdm-theme="dark"] #edpiano .ep-a,
+html[data-tsdm-theme="dark"] #edpiano .ep-ft {
+	color: #8b95a6;
+}
+
+html[data-tsdm-theme="dark"] #edpiano .ep-bar {
+	background: #323945;
+}
+
+html[data-tsdm-theme="dark"] #edpiano .ep-knob {
+	background: #20242c;
+}
+
+html[data-tsdm-theme="dark"] #edpiano .ep-list,
+html[data-tsdm-theme="dark"] #edpiano .ep-ft {
+	border-top-color: #2c323d;
+	background: #1c2027;
+}
+
+html[data-tsdm-theme="dark"] #edpiano .ep-list {
+	border-top-color: #2c323d;
+}
+
+html[data-tsdm-theme="dark"] #edpiano .ep-item {
+	color: #d7dde8;
+}
+
+html[data-tsdm-theme="dark"] #edpiano .ep-item:hover {
+	background: #2a303b;
+}
+
+html[data-tsdm-theme="dark"] #edpiano .ep-item.ep-cur {
+	background: #2b3a56;
+	color: #dbe7ff;
+}
+
+html[data-tsdm-theme="dark"] #edpiano .ep-item.ep-cur .ep-a {
+	color: #93aad6;
+}
+
+html[data-tsdm-theme="dark"] #edpiano .ep-num {
+	color: #6f7a8b;
+}
+
+html[data-tsdm-theme="dark"] #edpiano .ep-cat {
+	color: #7d8798;
+}
+
+html[data-tsdm-theme="dark"] #edpiano .ep-cat:hover {
+	background: #2a303b;
+	color: #aab4c4;
+}
+
+html[data-tsdm-theme="dark"] #edpiano .ep-cat-c {
+	color: #8b95a6;
+	background: #2c323d;
+}
+
+html[data-tsdm-theme="dark"] #edpiano .ep-cat.ep-cat-live {
+	color: #7fa4ea;
+}
+
+html[data-tsdm-theme="dark"] #edpiano .ep-cat.ep-cat-live .ep-cat-c {
+	color: #7fa4ea;
+	background: #2b3a56;
+}
+
+html[data-tsdm-theme="dark"] #edpiano .ep-load {
+	background: #2c323d;
+}
+
+html[data-tsdm-theme="dark"] #edpiano input.ep-range {
+	background: #3a4250;
+}
+
+/* ---------- 窄屏 ---------- */
+
+@media (max-height: 700px) {
+	#edpiano .ep-list {
+		max-height: 118px;
+	}
+}
+
+@media (max-width: 640px) {
+	#edpiano {
+		right: 10px;
+		bottom: 64px;
+	}
+
+	#edpiano .ep-panel {
+		width: calc(100vw - 20px);
+		max-width: 340px;
+	}
+
+	#edpiano .ep-list {
+		max-height: 150px;
+	}
+}

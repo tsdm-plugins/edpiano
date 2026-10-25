@@ -1,0 +1,101 @@
+{
+ "Title": "Discuz! Plugin",
+ "Data": {
+  "plugin": {
+   "available": "1",
+   "adminid": "1",
+   "name": "电钢琴",
+   "identifier": "edpiano",
+   "description": "全站右下角的悬浮 MIDI 钢琴播放器：在浏览器里解析 MIDI、用本地音色采样（SoundFont）实时合成，曲目之间交叉淡入淡出，换页后记住曲目与进度自动续播。曲目按分类分组显示，分类可折叠且记住每个会员的选择。曲库＝source/plugin/edpiano/midi/ 里的 .mid 文件，丢进去就出现在列表里；后台「曲库管理」页可上传、改曲名作者分类、调排序、删除。音色支持电钢琴、三角钢琴、小提琴+钢琴合奏（自动分声部）。不改模板与核心文件，停用即恢复原样。作者 Carinoasd。",
+   "datatables": "",
+   "directory": "edpiano/",
+   "copyright": "电钢琴 edpiano · (C) 2026 Carinoasd",
+   "version": "1.7.2",
+   "__modules": [
+    {
+     "name": "admincp",
+     "menu": "曲库管理",
+     "url": "",
+     "type": "3",
+     "adminid": "1",
+     "displayorder": "0"
+    },
+    {
+     "name": "edpiano",
+     "menu": "",
+     "url": "",
+     "type": "11",
+     "adminid": "0",
+     "displayorder": "0"
+    },
+    {
+     "name": "edpiano",
+     "menu": "",
+     "url": "",
+     "type": "28",
+     "adminid": "0",
+     "displayorder": "0"
+    }
+   ]
+  },
+  "version": "X5.0",
+  "var": [
+   {
+    "displayorder": "0",
+    "title": "启用播放器",
+    "description": "在所有页面的右下角显示悬浮播放器。关掉后整站不再输出任何脚本与样式。",
+    "variable": "on",
+    "type": "radio",
+    "extra": "",
+    "value": "1"
+   },
+   {
+    "displayorder": "1",
+    "title": "手机版也显示",
+    "description": "手机版（触屏模板）页面也显示播放器。第一次播放要下载约 2 MB 音色，手机流量请注意；关掉后手机版不再输出脚本。",
+    "variable": "mobile",
+    "type": "radio",
+    "extra": "",
+    "value": "1"
+   },
+   {
+    "displayorder": "2",
+    "title": "默认音色用三角钢琴",
+    "description": "会员第一次打开时使用的音色。关闭＝电钢琴（Rhodes 风格），开启＝三角钢琴。会员可以在播放器上随时切换，切换后记在浏览器里。",
+    "variable": "grand",
+    "type": "radio",
+    "extra": "",
+    "value": "0"
+   },
+   {
+    "displayorder": "3",
+    "title": "默认音量",
+    "description": "0 到 100。会员拖动音量条后会记住自己的音量，不再套用这里的默认值。",
+    "variable": "volume",
+    "type": "text",
+    "extra": "",
+    "value": "32"
+   },
+   {
+    "displayorder": "4",
+    "title": "换曲淡入淡出秒数",
+    "description": "切换曲目、切换音色时两首曲子交叠的时间，0 到 2 秒。设 0 就是直接切；0.5 到 0.8 听起来最顺。",
+    "variable": "fade",
+    "type": "text",
+    "extra": "",
+    "value": "0.7"
+   },
+   {
+    "displayorder": "5",
+    "title": "第一次点页面就自动开始播放",
+    "description": "浏览器不允许网页自动出声，所以只能在会员第一次点页面（任意位置）时开始。开启后，没听过的人第一次点页面就会响；关闭后要自己点播放器才会响。已经听过的人不受影响（会从上次的曲目与进度续播）。",
+    "variable": "autoplay",
+    "type": "radio",
+    "extra": "",
+    "value": "0"
+   }
+  ],
+  "uninstallfile": "uninstall.php",
+  "upgradefile": "upgrade.php"
+ }
+}
