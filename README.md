@@ -18,6 +18,9 @@ upload/source/plugin/edpiano/   插件本体，镜像正式站 source/plugin/edp
 ## 曲库说明
 
 正式站的曲库 `midi/`（`.mid` 转谱、曲名/分类元数据、`.vol`/`.violin.json` 合奏配置）
-是版权敏感内容，按曲目条目里的约定**仅论坛内试听**，因此**不入本仓库**（见 `.gitignore`），
-只在正式站维护。曲库工具链（`tools/`，CLI 专用带 Web 守卫）与音源样本（`sf/`，
-取自 FluidR3 衍生，CC BY 3.0）随插件入库。
+是版权敏感内容，按曲目条目里的约定**仅论坛内试听**，单独放在**私有仓库**
+[`tsdm-plugins/edpiano-midi`](https://github.com/tsdm-plugins/edpiano-midi)，
+以 submodule 挂在本仓库 `upload/source/plugin/edpiano/midi`（见 `.gitmodules`）。
+克隆本仓库后 `git submodule update --init` 才会拉到曲库；曲库格式说明与工具链
+（`tools/`，CLI 专用带 Web 守卫）见插件 README。音源样本（`sf/`，取自 FluidR3 衍生，
+CC BY 3.0）随本仓库公开分发。

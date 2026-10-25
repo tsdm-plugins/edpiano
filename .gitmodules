@@ -1,0 +1,3 @@
+[submodule "upload/source/plugin/edpiano/midi"]
+	path = upload/source/plugin/edpiano/midi
+	url = https://github.com/tsdm-plugins/edpiano-midi
